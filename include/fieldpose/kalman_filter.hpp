@@ -16,8 +16,16 @@ class KalmanFilter {
   KalmanFilter(const Eigen::VectorXd& x0, const Eigen::MatrixXd& P0);
 
   void predict(const Eigen::MatrixXd& F, const Eigen::MatrixXd& Q);
+  // Predict with an additive control term: x = F x + u.
+  void predict(const Eigen::MatrixXd& F, const Eigen::VectorXd& u,
+               const Eigen::MatrixXd& Q);
   void update(const Eigen::VectorXd& z, const Eigen::MatrixXd& H,
               const Eigen::MatrixXd& R);
+
+  // Squared Mahalanobis distance of the innovation, y^T S^-1 y.
+  // Compare against a chi-square quantile to gate outliers.
+  double mahalanobis2(const Eigen::VectorXd& z, const Eigen::MatrixXd& H,
+                      const Eigen::MatrixXd& R) const;
 
   const Eigen::VectorXd& state() const { return x_; }
   const Eigen::MatrixXd& covariance() const { return P_; }

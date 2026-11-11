@@ -10,6 +10,20 @@ void KalmanFilter::predict(const Eigen::MatrixXd& F, const Eigen::MatrixXd& Q) {
   P_ = F * P_ * F.transpose() + Q;
 }
 
+void KalmanFilter::predict(const Eigen::MatrixXd& F, const Eigen::VectorXd& u,
+                           const Eigen::MatrixXd& Q) {
+  x_ = F * x_ + u;
+  P_ = F * P_ * F.transpose() + Q;
+}
+
+double KalmanFilter::mahalanobis2(const Eigen::VectorXd& z,
+                                  const Eigen::MatrixXd& H,
+                                  const Eigen::MatrixXd& R) const {
+  const Eigen::VectorXd y = z - H * x_;
+  const Eigen::MatrixXd S = H * P_ * H.transpose() + R;
+  return y.dot(S.ldlt().solve(y));
+}
+
 void KalmanFilter::update(const Eigen::VectorXd& z, const Eigen::MatrixXd& H,
                           const Eigen::MatrixXd& R) {
   const Eigen::VectorXd y = z - H * x_;
