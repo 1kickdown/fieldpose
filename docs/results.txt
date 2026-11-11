@@ -1,0 +1,26 @@
+Scenarios: 8, seeds per scenario: 50, runs: 400
+Position error threshold: 2.0 in
+
+| Method | Position RMSE (in) | Heading RMSE (deg) | Time under 2 in | Final error (in) |
+|---|---|---|---|---|
+| raw odometry | 0.95 | 0.92 | 91% | 1.43 |
+| filter: odometry+IMU | 0.57 | 0.28 | 98% | 0.74 |
+| filter: +AprilTag, no gating | 0.57 | 0.27 | 99% | 0.56 |
+| filter: +AprilTag, gating | 0.41 | 0.27 | 100% | 0.33 |
+
+Per scenario, mean position RMSE (in): raw / odometry+IMU / +tag no gate / +tag gate
+  QUALIFICATION03_Auto       0.48 /   0.39 /   0.51 /   0.31
+  QUALIFICATION05_Auto       0.49 /   0.39 /   0.44 /   0.31
+  QUALIFICATION07_Auto       0.51 /   0.40 /   0.51 /   0.31
+  QUALIFICATION11_Auto       0.48 /   0.38 /   0.50 /   0.31
+  QUALIFICATION14_Auto       0.46 /   0.37 /   0.40 /   0.30
+  synth_arc                  1.63 /   0.88 /   0.77 /   0.65
+  synth_loop                 2.29 /   1.19 /   0.90 /   0.77
+  synth_spin_drive           1.28 /   0.54 /   0.53 /   0.29
+
+Gate: rejected 390 of 390 true outliers, and 8 of 13457 good tag fixes.
+
+Recovery time to < 1.0 in:
+  after tag blackout (>=3 s), gated   : 50 events, 9 pushed above 1.0 in; mean 0.04 s, median 0.00 s, max 0.56 s
+  after an outlier tag fix, no gating : 390 events, 304 pushed above 1.0 in; mean 0.98 s, median 0.70 s, max 15.10 s
+  after an outlier tag fix, gating    : 390 events, 1 pushed above 1.0 in; mean 0.00 s, median 0.00 s, max 0.14 s
