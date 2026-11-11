@@ -31,6 +31,9 @@ target_compile_options(fieldpose PRIVATE -Wall -Wextra -Wpedantic)
 add_executable(extract_trajectories apps/extract_trajectories.cpp)
 target_link_libraries(extract_trajectories PRIVATE fieldpose)
 
+add_executable(evaluate apps/evaluate.cpp)
+target_link_libraries(evaluate PRIVATE fieldpose)
+
 option(FIELDPOSE_BUILD_TESTS "Build unit tests" ON)
 if(FIELDPOSE_BUILD_TESTS)
   FetchContent_Declare(
@@ -49,4 +52,18 @@ if(FIELDPOSE_BUILD_TESTS)
   target_link_libraries(fieldpose_tests PRIVATE fieldpose GTest::gtest_main)
   include(GoogleTest)
   gtest_discover_tests(fieldpose_tests)
+endif()
+
+option(FIELDPOSE_BUILD_BENCH "Build benchmarks" OFF)
+if(FIELDPOSE_BUILD_BENCH)
+  FetchContent_Declare(
+    benchmark
+    GIT_REPOSITORY https://github.com/google/benchmark.git
+    GIT_TAG v1.9.1
+    GIT_SHALLOW TRUE)
+  set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
+  set(BENCHMARK_ENABLE_GTEST_TESTS OFF CACHE BOOL "" FORCE)
+  FetchContent_MakeAvailable(benchmark)
+  add_executable(fieldpose_bench bench/bench_fusion.cpp)
+  target_link_libraries(fieldpose_bench PRIVATE fieldpose benchmark::benchmark)
 endif()
