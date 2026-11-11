@@ -46,4 +46,17 @@ std::vector<double> recovery_times(const SimResult& sim, const FusionRun& run,
   return out;
 }
 
+std::vector<double> outlier_recovery_times(const SimResult& sim, const FusionRun& run,
+                                           double thr) {
+  std::vector<double> out;
+  const int n = static_cast<int>(run.estimate.size());
+  for (const SimEvent& e : sim.events) {
+    if (e.type != SimEvent::Type::Tag || !e.outlier) continue;
+    int k = e.step;
+    while (k < n && distance(run.estimate[k], sim.truth[k]) >= thr) ++k;
+    out.push_back((k - e.step) * sim.dt);
+  }
+  return out;
+}
+
 }  // namespace fieldpose

@@ -25,4 +25,11 @@ ErrorStats compute_stats(const std::vector<Pose2D>& est,
 std::vector<double> recovery_times(const SimResult& sim, const FusionRun& run,
                                    double threshold_in, double min_gap_s);
 
+// For every gross-outlier tag measurement in the simulation, the time (s)
+// from that measurement until the position error is under `threshold_in`.
+// 0 means the estimate was never pushed above the threshold (e.g. the gate
+// rejected it).
+std::vector<double> outlier_recovery_times(const SimResult& sim, const FusionRun& run,
+                                           double threshold_in);
+
 }  // namespace fieldpose
