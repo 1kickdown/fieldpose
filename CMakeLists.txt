@@ -17,10 +17,19 @@ set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
 set(EIGEN_BUILD_PKGCONFIG OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(eigen)
 
-add_library(fieldpose src/kalman_filter.cpp)
+add_library(fieldpose
+  src/kalman_filter.cpp
+  src/trajectory.cpp
+  src/log_loader.cpp
+  src/simulator.cpp
+  src/pose_fusion.cpp
+  src/evaluation.cpp)
 target_include_directories(fieldpose PUBLIC include)
 target_link_libraries(fieldpose PUBLIC Eigen3::Eigen)
 target_compile_options(fieldpose PRIVATE -Wall -Wextra -Wpedantic)
+
+add_executable(extract_trajectories apps/extract_trajectories.cpp)
+target_link_libraries(extract_trajectories PRIVATE fieldpose)
 
 option(FIELDPOSE_BUILD_TESTS "Build unit tests" ON)
 if(FIELDPOSE_BUILD_TESTS)
@@ -32,7 +41,11 @@ if(FIELDPOSE_BUILD_TESTS)
   set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
   FetchContent_MakeAvailable(googletest)
   enable_testing()
-  add_executable(fieldpose_tests tests/test_kalman_filter.cpp)
+  add_executable(fieldpose_tests
+    tests/test_kalman_filter.cpp
+    tests/test_log_loader.cpp
+    tests/test_simulator.cpp
+    tests/test_pose_fusion.cpp)
   target_link_libraries(fieldpose_tests PRIVATE fieldpose GTest::gtest_main)
   include(GoogleTest)
   gtest_discover_tests(fieldpose_tests)
