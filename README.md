@@ -109,12 +109,7 @@ automatically. Benchmark: `-DFIELDPOSE_BUILD_BENCH=ON`. Plot:
 - Tag blackout recovery is trivial in this setup (error rarely exceeds 1 in).
 - Dynamic-size Eigen matrices allocate in the hot loop; fixed sizes are future work.
 
-## Data and attribution
 
-Trajectory waypoints (`data/trajectories/`) are numbers extracted from match
-logs of my FTC team (Turing League Event 1, 5 Nov 2023), written by the team's
-robot code. No team source code is included in this repository. Field size
-(141.24 in) and the sensor setup come from the team's robot parameters.
 
 ## License
 
